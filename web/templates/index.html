@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<!-- UI flow: set group size → Sample (POST /api/sample) → Monte Carlo (SSE /stream/monte-carlo) -->
+
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Birthday Paradox Simulation</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@600;700&display=swap"
+
+      rel="stylesheet"
+
+    />
+
+    <link rel="stylesheet" href="/static/style.css" />
+
+  </head>
+
+  <body>
+
+    <div class="bg-blob bg-blob-a" aria-hidden="true"></div>
+
+    <div class="bg-blob bg-blob-b" aria-hidden="true"></div>
+
+
+
+    <main class="page">
+
+      <header class="hero">
+
+        <div class="hero-badge" aria-hidden="true">🎂</div>
+
+        <h1>Birthday Paradox</h1>
+
+        <p class="tagline">Monte Carlo estimate of shared birthdays in a group</p>
+
+      </header>
+
+
+
+      <section class="card controls-card">
+
+        <label class="field">
+
+          <span class="field-label">Group size</span>
+
+          <span class="field-hint">{{ min_group }}–{{ max_group }} people</span>
+
+          <input
+
+            type="number"
+
+            id="group-size"
+
+            min="{{ min_group }}"
+
+            max="{{ max_group }}"
+
+            value="23"
+
+          />
+
+        </label>
+
+
+
+        <div class="controls">
+
+          <button type="button" id="sample-btn" class="btn btn-secondary">
+
+            Generate one sample
+
+          </button>
+
+          <button type="button" id="monte-btn" class="btn btn-primary">
+
+            Run {{ simulation_count | int }} simulations
+
+          </button>
+
+        </div>
+
+
+
+        <p id="status" class="status" aria-live="polite"></p>
+
+      </section>
+
+
+
+      <section id="sample-result" class="card result-card hidden" aria-live="polite">
+
+        <h2 class="panel-title">
+
+          <span class="panel-icon" aria-hidden="true">👥</span>
+
+          One random group
+
+        </h2>
+
+        <div id="birthday-chips" class="chips" aria-label="Generated birthdays"></div>
+
+        <p id="match-line" class="match-banner"></p>
+
+      </section>
+
+
+
+      <section id="monte-result" class="card result-card hidden" aria-live="polite">
+
+        <h2 class="panel-title">
+
+          <span class="panel-icon" aria-hidden="true">📊</span>
+
+          Monte Carlo result
+
+        </h2>
+
+        <div class="progress-wrap" aria-hidden="true">
+
+          <div id="progress-bar" class="progress-bar"></div>
+
+        </div>
+
+        <p id="progress-line" class="progress-text"></p>
+
+        <p id="probability-stat" class="stat hidden"></p>
+
+        <p id="summary-line" class="summary"></p>
+
+      </section>
+
+
+
+      <section class="card help" aria-labelledby="help-heading">
+
+        <h2 id="help-heading">Help</h2>
+
+        <h3>About this app</h3>
+
+        <p>
+
+          In a group of people, the chance that at least two share a birthday is
+
+          higher than most people expect. This app picks random calendar dates for
+
+          each person, then repeats many trials to estimate the probability.
+
+        </p>
+
+        <h3>How to use it</h3>
+
+        <ul>
+
+          <li>
+
+            Set the group size (try <strong>23</strong> — often near a 50% match rate).
+
+          </li>
+
+          <li>
+
+            <strong>Generate one sample</strong> shows a single random group and whether
+
+            any birthday repeats.
+
+          </li>
+
+          <li>
+
+            <strong>Run {{ simulation_count | int }} simulations</strong> repeats the
+
+            experiment many times and shows an estimated percentage (progress updates
+
+            every 10,000 runs).
+
+          </li>
+
+        </ul>
+
+      </section>
+
+    </main>
+
+    <script>
+
+      window.BIRTHDAY_CONFIG = {
+
+        simulationCount: {{ simulation_count }},
+
+      };
+
+    </script>
+
+    <script src="/static/app.js"></script>
+
+  </body>
+
+</html>
+
