@@ -141,3 +141,12 @@ monteBtn.addEventListener("click", () => {
     setBusy(false, "Connection lost — try again.");
   };
 });
+
+document.querySelectorAll("[data-help-jump]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.getElementById("help-heading")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  });
+});
